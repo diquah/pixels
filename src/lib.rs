@@ -30,7 +30,6 @@
 //! `WGPU_ADAPTER_NAME` takes precedence.
 
 #![deny(clippy::all)]
-#![forbid(unsafe_code)]
 
 pub use crate::builder::{check_texture_size, PixelsBuilder};
 pub use crate::renderers::ScalingRenderer;
@@ -610,6 +609,22 @@ impl<'win> Pixels<'win> {
                 view_formats: vec![],
             },
         );
+
+        #[cfg(target_os = "macos")]
+        unsafe {
+            #[allow(mutable_transmutes)]
+            let surface =
+                std::mem::transmute::<&wgpu::Surface, &mut wgpu::Surface>(&self.context.surface);
+            surface.as_hal::<wgpu::hal::metal::Api, _, ()>(|surface| {
+                if let Some(surface_ref) = surface {
+                    // AHH! Converting '&' to '&mut'
+                    #[allow(invalid_reference_casting)]
+                    let surface_mut = &mut *(surface_ref as *const wgpu::hal::metal::Surface
+                        as *mut wgpu::hal::metal::Surface);
+                    surface_mut.present_with_transaction = true;
+                }
+            });
+        }
     }
 
     /// Get a mutable byte slice for the pixel buffer. The buffer is _not_ cleared for you; it will

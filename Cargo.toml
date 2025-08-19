@@ -20,41 +20,41 @@ include = [
 ]
 
 [dependencies]
-bytemuck = "1.12"
+bytemuck = "1.23"
 raw-window-handle = "0.6"
-thiserror = "1.0"
-ultraviolet = "0.9"
+thiserror = "2.0"
+ultraviolet = "0.10"
 wgpu = "0.19"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wgpu = { version = "0.19", features = ["webgl"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-pollster = "0.3"
+pollster = "0.4"
 
 [dev-dependencies]
 pixels-mocks = { path = "internals/pixels-mocks" }
-winit = "0.29"
+winit = "0.30"
 
-[workspace]
-members = [
-    "examples/*",
-    "internals/*",
-    "run-wasm",
-]
+# [workspace]
+# members = [
+#     "examples/*",
+#     "internals/*",
+#     "run-wasm",
+# ]
 
-# Dependencies that are shared by the workspace.
-[workspace.dependencies]
-env_logger = "0.10"
-error-iter = "0.4"
-log = "0.4"
-winit = "0.29"
-winit_input_helper = "0.15"
+# # Dependencies that are shared by the workspace.
+# [workspace.dependencies]
+# env_logger = "0.10"
+# error-iter = "0.4"
+# log = "0.4"
+# winit = "0.30"
+# winit_input_helper = "0.16"
 
-# Note that `pixels` is pinned to a published version to allow users to copy working code from the
-# examples into their own projects. The example packages that use this workspace version will not be
-# able to build against the local working copy while developing by default.
-#
-# Temporarily change the dependency to use a path specification while testing in development.
-pixels = "0.15"
-# pixels = { path = "." }
+# # Note that `pixels` is pinned to a published version to allow users to copy working code from the
+# # examples into their own projects. The example packages that use this workspace version will not be
+# # able to build against the local working copy while developing by default.
+# #
+# # Temporarily change the dependency to use a path specification while testing in development.
+# pixels = "0.15"
+# # pixels = { path = "." }
